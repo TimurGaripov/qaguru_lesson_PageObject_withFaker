@@ -1,55 +1,82 @@
 package com.demoqa.tests;
 
+import com.github.javafaker.Faker;
+import org.junit.jupiter.api.BeforeEach;
 import com.codeborne.selenide.Configuration;
 import com.demoqa.pages.DemoqaRegistrationForm;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import java.io.File;
+import java.util.Locale;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static java.lang.String.format;
 
 
-public class DemoqaFormTest {
+public class DemoqaFormTest extends TestBase{
     DemoqaRegistrationForm registrationFormPage = new DemoqaRegistrationForm();
+    Faker faker = new Faker();
 
-    @BeforeAll
-    // Настройки для теста
-    static void configure() {
-        Configuration.baseUrl = "https://demoqa.com";
-        Configuration.browserSize = "1024x768";
+    String firstName,
+            lastName,
+            userEmail,
+            userNumber,
+            day,
+            month,
+            year,
+            state = "NCR",
+            city = "Delhi",
+            gender = "Male",
+            subject = "Arts",
+            currentAddress;
+
+    @BeforeEach
+    void prepareTestData() {
+        firstName = faker.name().firstName();
+        lastName = faker.name().lastName();
+        userEmail = faker.internet().emailAddress();
+        userNumber = faker.phoneNumber().subscriberNumber(10);
+        day = faker.number().numberBetween(10, 30) + "";
+        month = "July";
+        year = faker.number().numberBetween(1980, 1999) + "";
+        currentAddress = faker.address().fullAddress();
     }
 
     @Test
     // Заполнение формы данными
     void practiceFormTest() {
         registrationFormPage.openPage()
-                .setFirstName("Test")
-                .setLastName("Testov")
-                .setEmail("testov@test.ru")
-                .setGender("Male")
-                .setNumber("9151302211")
-                .setBirthDate("07", "May", "1986")
-                .setSubject("Arts")
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setEmail(userEmail)
+                .setGender(gender)
+                .setNumber(userNumber)
+                .setBirthDate(day, month, year)
+                .setSubject(subject)
                 .setHobbie()
-                .setAddress("Bashkortostan, Ufa")
+                .setAddress(currentAddress)
                 .uploadPicture("src/test/resources/123.jpg")
-                .setState("NCR")
-                .setCity("Delhi")
+                .setState(state)
+                .setCity(city)
                 .submit();
 
         // Проверка ответа
+        String expectedName = format("%s %s", firstName, lastName);
+        String expectedBirthDate = format("%s %s,%s", day, month, year);
+        String expectedStateCity = format("%s %s", state, city);
+
         registrationFormPage.checkVisible();
-        registrationFormPage.checkResult("Student Name", "Test Testov")
-                .checkResult("Student Email", "testov@test.ru")
-                .checkResult("Gender", "Male")
-                .checkResult("Mobile", "9151302211")
-                .checkResult("Date of Birth", "07 May,1986")
-                .checkResult("Subjects", "Arts")
+        registrationFormPage.checkResult("Student Name", expectedName)
+                .checkResult("Student Email", userEmail)
+                .checkResult("Gender", gender)
+                .checkResult("Mobile", userNumber)
+                .checkResult("Date of Birth", expectedBirthDate)
+                .checkResult("Subjects", subject)
                 .checkResult("Hobbies", "Sports")
                 .checkResult("Picture", "123.jpg")
-                .checkResult("Address", "Bashkortostan, Ufa")
-                .checkResult("State and City", "NCR Delhi");
+                .checkResult("Address", currentAddress)
+                .checkResult("State and City", expectedStateCity);
     }
 }
