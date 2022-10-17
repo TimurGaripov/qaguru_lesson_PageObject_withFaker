@@ -1,17 +1,10 @@
 package com.demoqa.tests;
 
+import com.demoqa.pages.DemoqaRegistrationForm;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
-import com.codeborne.selenide.Configuration;
-import com.demoqa.pages.DemoqaRegistrationForm;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import java.io.File;
-import java.util.Locale;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
 import static java.lang.String.format;
 
 
