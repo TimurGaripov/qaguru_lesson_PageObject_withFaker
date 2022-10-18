@@ -30,11 +30,13 @@ dependencies {
             "io.qameta.allure:allure-selenide:$allureVersion",
             "org.junit.jupiter:junit-jupiter:5.9.0",
             "org.slf4j:slf4j-simple:$slf4jVersion",
-            'com.github.javafaker:javafaker:1.0.2'
+            "com.github.javafaker:javafaker:1.0.2"
     )
 }
 
+
 tasks.withType(Test) {
+    systemProperties(System.getProperties())
     useJUnitPlatform()
 
     testLogging {
@@ -45,4 +47,8 @@ tasks.withType(Test) {
     }
 }
 
-test {}
+task properties_test(type: Test) {
+    useJUnitPlatform {
+        includeTags "properties"
+    }
+}
