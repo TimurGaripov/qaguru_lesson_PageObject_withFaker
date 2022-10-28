@@ -3,6 +3,7 @@ package com.demoqa.tests;
 import com.demoqa.pages.DemoqaRegistrationForm;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.String.format;
@@ -38,6 +39,7 @@ public class DemoqaFormTest extends TestBase{
     }
 
     @Test
+    @Tag("properties")
     // Заполнение формы данными
     void practiceFormTest() {
         registrationFormPage.openPage()
